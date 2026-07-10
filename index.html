@@ -1,0 +1,475 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>今天吃什么 - 转盘决定三餐</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(135deg, #fef9ef 0%, #fff5e6 50%, #fef0e0 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    padding: 0 12px 30px;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .app-header {
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    padding: 18px 0 10px;
+  }
+  .app-header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #e74c3c;
+    letter-spacing: 2px;
+  }
+  .app-header p {
+    font-size: 13px;
+    color: #999;
+    margin-top: 4px;
+  }
+  .meal-tabs {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 8px 0 12px;
+  }
+  .meal-tab {
+    flex: 0 0 auto;
+    min-width: 70px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 2px solid #f0d5c0;
+    background: #fffaf5;
+    font-size: 15px;
+    font-weight: 600;
+    color: #8b6f5e;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: center;
+  }
+  .meal-tab .tab-icon {
+    display: block;
+    font-size: 20px;
+    margin-bottom: 2px;
+  }
+  .meal-tab .tab-label {
+    font-size: 13px;
+  }
+  .meal-tab.active {
+    border-color: #e74c3c;
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.35);
+  }
+  .meal-tab:active { transform: scale(0.95); }
+  .category-section {
+    width: 100%;
+    max-width: 420px;
+    padding: 4px 0 8px;
+  }
+  .category-section .section-label {
+    font-size: 12px;
+    color: #b89880;
+    padding: 0 4px 6px;
+    font-weight: 500;
+  }
+  .category-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 2px;
+  }
+  .category-tag {
+    padding: 5px 14px;
+    border-radius: 14px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border: 1.5px solid #e0d0c4;
+    background: #fffcf8;
+    color: #8b6f5e;
+  }
+  .category-tag.active {
+    border-color: #f39c12;
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(243, 156, 18, 0.4);
+    font-weight: 600;
+  }
+  .category-tag:active { transform: scale(0.92); }
+  .wheel-wrapper {
+    width: 100%;
+    max-width: 420px;
+    position: relative;
+    margin: 6px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    touch-action: none;
+    -webkit-touch-callout: none;
+  }
+  .wheel-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    max-width: 380px;
+    touch-action: none;
+  }
+  .wheel-container canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    touch-action: none;
+    border-radius: 50%;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.12), inset 0 2px 10px rgba(255,255,255,0.3);
+  }
+  .wheel-pointer {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-top: 28px solid #e74c3c;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
+    z-index: 10;
+    pointer-events: none;
+  }
+  .wheel-pointer::after {
+    content: "";
+    position: absolute;
+    top: -32px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px; height: 12px;
+    background: #e74c3c;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(231,76,60,0.5);
+  }
+  .spin-btn-wrapper {
+    width: 100%;
+    max-width: 420px;
+    padding: 14px 0 8px;
+    display: flex;
+    justify-content: center;
+  }
+  .spin-btn {
+    padding: 14px 48px;
+    border: none;
+    border-radius: 28px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    letter-spacing: 3px;
+    box-shadow: 0 4px 16px rgba(231,76,60,0.4);
+  }
+  .spin-btn:active { transform: scale(0.96); }
+  .spin-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .spin-count {
+    font-size: 12px;
+    color: #b89880;
+    text-align: center;
+    margin-top: 4px;
+  }
+  .result-area {
+    width: 100%;
+    max-width: 420px;
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 6px 0 4px;
+  }
+  .result-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 14px 28px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    text-align: center;
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    min-width: 200px;
+  }
+  .result-card.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  .result-card .result-label {
+    font-size: 12px;
+    color: #b89880;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .result-card .result-name {
+    font-size: 26px;
+    font-weight: 800;
+    color: #e74c3c;
+    letter-spacing: 1px;
+  }
+  .result-card .result-emoji {
+    font-size: 32px;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .result-card .result-sub {
+    font-size: 12px;
+    color: #ccc;
+    margin-top: 4px;
+  }
+  @keyframes pulse {
+    0%,100%{transform:scale(1)}
+    50%{transform:scale(1.05)}
+  }
+  .spin-btn.spinning { animation: pulse 0.6s ease-in-out infinite; }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    20%{transform:translateX(-4px)}
+    40%{transform:translateX(4px)}
+    60%{transform:translateX(-3px)}
+    80%{transform:translateX(3px)}
+  }
+  .result-card.shake { animation: shake 0.4s ease; }
+  @media (max-width:380px){
+    .meal-tab{min-width:60px;padding:6px 10px}
+    .meal-tab .tab-icon{font-size:17px}
+    .meal-tab .tab-label{font-size:12px}
+    .category-tag{padding:4px 10px;font-size:11px}
+    .spin-btn{padding:12px 36px;font-size:16px}
+  }
+  @media (min-width:500px){
+    body{padding:20px 24px 40px}
+    .app-header h1{font-size:26px}
+  }
+</style>
+</head>
+<body>
+<div class="app-header">
+  <h1>今天吃什么</h1>
+  <p>转盘决定，告别选择困难</p>
+</div>
+<div class="meal-tabs" id="mealTabs">
+  <div class="meal-tab active" data-meal="breakfast">
+    <span class="tab-icon">🌅</span><span class="tab-label">早餐</span>
+  </div>
+  <div class="meal-tab" data-meal="lunch">
+    <span class="tab-icon">☀️</span><span class="tab-label">午餐</span>
+  </div>
+  <div class="meal-tab" data-meal="dinner">
+    <span class="tab-icon">🌙</span><span class="tab-label">晚餐</span>
+  </div>
+  <div class="meal-tab" data-meal="snack">
+    <span class="tab-icon">🍿</span><span class="tab-label">零食</span>
+  </div>
+</div>
+<div class="category-section">
+  <div class="section-label">选今天想吃的类型（可选，多选）</div>
+  <div class="category-tags" id="categoryTags"></div>
+</div>
+<div class="wheel-wrapper">
+  <div class="wheel-container" id="wheelContainer">
+    <div class="wheel-pointer"></div>
+    <canvas id="wheelCanvas"></canvas>
+  </div>
+</div>
+<div class="spin-btn-wrapper">
+  <button class="spin-btn" id="spinBtn">转一转</button>
+</div>
+<div class="spin-count" id="spinCount"></div>
+<div class="result-area" id="resultArea">
+  <div class="result-card" id="resultCard">
+    <span class="result-emoji" id="resultEmoji"></span>
+    <div class="result-label" id="resultLabel">今日推荐</div>
+    <div class="result-name" id="resultName"></div>
+    <div class="result-sub" id="resultSub"></div>
+  </div>
+</div>
+<script>
+(function(){
+"use strict";
+var FOODS=[
+{name:"葱油拌面",meals:["breakfast","lunch"],cats:["面食"]},
+{name:"小笼包",meals:["breakfast","lunch","snack"],cats:["面食","粤菜"]},
+{name:"生煎包",meals:["breakfast","snack"],cats:["面食"]},
+{name:"煎饼果子",meals:["breakfast","snack"],cats:["面食","小吃"]},
+{name:"豆浆油条",meals:["breakfast"],cats:["传统早餐"]},
+{name:"皮蛋瘦肉粥",meals:["breakfast","lunch"],cats:["粥粉"]},
+{name:"肠粉",meals:["breakfast","lunch","snack"],cats:["粤菜","粥粉"]},
+{name:"馄饨",meals:["breakfast","lunch","snack"],cats:["面食"]},
+{name:"肉包子",meals:["breakfast","snack"],cats:["面食"]},
+{name:"茶叶蛋",meals:["breakfast","snack"],cats:["传统早餐","小吃"]},
+{name:"鸡蛋灌饼",meals:["breakfast"],cats:["面食"]},
+{name:"手抓饼",meals:["breakfast","snack"],cats:["面食"]},
+{name:"三明治",meals:["breakfast","snack"],cats:["西餐","轻食"]},
+{name:"牛奶面包",meals:["breakfast","snack"],cats:["西餐"]},
+{name:"米粉",meals:["breakfast","lunch"],cats:["粥粉"]},
+{name:"豆腐花",meals:["breakfast","snack"],cats:["零食","小吃"]},
+{name:"烧麦",meals:["breakfast","snack"],cats:["面食"]},
+{name:"豆沙包",meals:["breakfast","snack"],cats:["面食"]},
+{name:"煎饺",meals:["breakfast","lunch","snack"],cats:["面食"]},
+{name:"锅贴",meals:["breakfast","snack"],cats:["面食"]},
+{name:"糯米饭团",meals:["breakfast","lunch"],cats:["传统早餐","米饭"]},
+{name:"油条",meals:["breakfast"],cats:["传统早餐"]},
+{name:"宫保鸡丁",meals:["lunch","dinner"],cats:["川菜","家常"]},
+{name:"鱼香肉丝",meals:["lunch","dinner"],cats:["川菜","家常"]},
+{name:"麻婆豆腐",meals:["lunch","dinner"],cats:["川菜","家常"]},
+{name:"回锅肉",meals:["lunch","dinner"],cats:["川菜"]},
+{name:"红烧肉",meals:["lunch","dinner"],cats:["家常"]},
+{name:"糖醋里脊",meals:["lunch","dinner"],cats:["家常"]},
+{name:"清蒸鲈鱼",meals:["lunch","dinner"],cats:["粤菜","家常"]},
+{name:"番茄炒蛋",meals:["lunch","dinner"],cats:["家常"]},
+{name:"地三鲜",meals:["lunch","dinner"],cats:["家常"]},
+{name:"干煸豆角",meals:["lunch","dinner"],cats:["川菜","家常"]},
+{name:"土豆炖牛腩",meals:["lunch","dinner"],cats:["家常"]},
+{name:"红烧排骨",meals:["lunch","dinner"],cats:["家常"]},
+{name:"黄焖鸡米饭",meals:["lunch","dinner"],cats:["米饭"]},
+{name:"煲仔饭",meals:["lunch","dinner"],cats:["米饭","粤菜"]},
+{name:"叉烧饭",meals:["lunch","dinner"],cats:["米饭","粤菜"]},
+{name:"海南鸡饭",meals:["lunch","dinner"],cats:["米饭","粤菜"]},
+{name:"咖喱饭",meals:["lunch","dinner"],cats:["米饭","日韩"]},
+{name:"蛋包饭",meals:["lunch","dinner"],cats:["日韩","米饭"]},
+{name:"兰州拉面",meals:["lunch","dinner"],cats:["面食"]},
+{name:"炸酱面",meals:["lunch","dinner"],cats:["面食"]},
+{name:"热干面",meals:["lunch","dinner"],cats:["面食"]},
+{name:"担担面",meals:["lunch","dinner"],cats:["面食","川菜"]},
+{name:"牛肉面",meals:["lunch","dinner"],cats:["面食"]},
+{name:"水煮鱼",meals:["lunch","dinner"],cats:["川菜"]},
+{name:"酸菜鱼",meals:["lunch","dinner"],cats:["川菜"]},
+{name:"青椒肉丝饭",meals:["lunch","dinner"],cats:["家常","米饭"]},
+{name:"鱼香茄子饭",meals:["lunch","dinner"],cats:["川菜","米饭"]},
+{name:"辣子鸡",meals:["lunch","dinner"],cats:["川菜"]},
+{name:"白切鸡",meals:["lunch","dinner"],cats:["粤菜"]},
+{name:"烤鸭饭",meals:["lunch","dinner"],cats:["家常","米饭"]},
+{name:"火锅",meals:["lunch","dinner"],cats:["火锅","川菜"]},
+{name:"麻辣烫",meals:["lunch","dinner","snack"],cats:["川菜","小吃"]},
+{name:"串串香",meals:["dinner","snack"],cats:["川菜","小吃"]},
+{name:"烤鱼",meals:["dinner"],cats:["火锅","烧烤"]},
+{name:"韩式烤肉",meals:["dinner"],cats:["日韩","烧烤"]},
+{name:"日式拉面",meals:["lunch","dinner"],cats:["日韩","面食"]},
+{name:"寿司",meals:["lunch","dinner"],cats:["日韩"]},
+{name:"披萨",meals:["lunch","dinner"],cats:["西餐"]},
+{name:"意面",meals:["lunch","dinner"],cats:["西餐"]},
+{name:"牛排",meals:["dinner"],cats:["西餐"]},
+{name:"部队锅",meals:["dinner"],cats:["日韩","火锅"]},
+{name:"石锅拌饭",meals:["lunch","dinner"],cats:["日韩","米饭"]},
+{name:"寿喜烧",meals:["dinner"],cats:["日韩","火锅"]},
+{name:"麻辣香锅",meals:["lunch","dinner"],cats:["川菜","火锅"]},
+{name:"椰子鸡",meals:["dinner"],cats:["火锅","轻食"]},
+{name:"烤串",meals:["snack","dinner"],cats:["烧烤","小吃"]},
+{name:"沙拉",meals:["lunch","dinner"],cats:["轻食"]},
+{name:"铁板烧",meals:["dinner"],cats:["日韩"]},
+{name:"珍珠奶茶",meals:["snack"],cats:["零食","甜品"]},
+{name:"冰淇淋",meals:["snack"],cats:["甜品"]},
+{name:"蛋糕",meals:["snack"],cats:["甜品","西餐"]},
+{name:"蛋挞",meals:["snack"],cats:["甜品","粤菜"]},
+{name:"泡芙",meals:["snack"],cats:["甜品","西餐"]},
+{name:"章鱼小丸子",meals:["snack"],cats:["小吃","日韩"]},
+{name:"鸡排",meals:["snack"],cats:["小吃","西餐"]},
+{name:"臭豆腐",meals:["snack"],cats:["小吃"]},
+{name:"糖葫芦",meals:["snack"],cats:["小吃","甜品"]},
+{name:"双皮奶",meals:["snack"],cats:["甜品","粤菜"]},
+{name:"杨枝甘露",meals:["snack"],cats:["甜品","粤菜"]},
+{name:"冰粉",meals:["snack"],cats:["甜品","小吃"]},
+{name:"凉皮",meals:["snack","lunch"],cats:["小吃","面食"]},
+{name:"肉夹馍",meals:["snack","lunch"],cats:["小吃","面食"]},
+{name:"糯米鸡",meals:["snack","breakfast"],cats:["粤菜","米饭"]},
+{name:"炸鸡",meals:["snack","dinner"],cats:["西餐","小吃"]},
+{name:"关东煮",meals:["snack"],cats:["小吃","日韩"]},
+{name:"烤红薯",meals:["snack"],cats:["小吃"]},
+{name:"奶茶",meals:["snack"],cats:["零食","甜品"]},
+{name:"可丽饼",meals:["snack"],cats:["甜品","西餐"]}
+];
+var CATS=["面食","米饭","粥粉","家常","川菜","粤菜","西餐","日韩","小吃","甜品","轻食","火锅","烧烤","传统早餐","零食"];
+var MMAP={breakfast:{label:"早餐",emoji:"🌅"},lunch:{label:"午餐",emoji:"☀️"},dinner:{label:"晚餐",emoji:"🌙"},snack:{label:"零食",emoji:"🍿"}};
+var EMO={"葱油拌面":"🍜","小笼包":"🥟","生煎包":"🥟","煎饼果子":"🫓","豆浆油条":"🥖","皮蛋瘦肉粥":"🥣","肠粉":"🫘","馄饨":"🥟","肉包子":"🥟","茶叶蛋":"🥚","鸡蛋灌饼":"🫓","手抓饼":"🫓","三明治":"🥪","牛奶面包":"🥛","米粉":"🍜","豆腐花":"🥣","烧麦":"🥟","豆沙包":"🥟","煎饺":"🥟","锅贴":"🥟","糯米饭团":"🍙","宫保鸡丁":"🍗","鱼香肉丝":"🍖","麻婆豆腐":"🫘","回锅肉":"🥩","红烧肉":"🍖","糖醋里脊":"🥩","清蒸鲈鱼":"🐟","番茄炒蛋":"🍳","地三鲜":"🥬","干煸豆角":"🥬","土豆炖牛腩":"🥩","红烧排骨":"🍖","黄焖鸡米饭":"🍗","煲仔饭":"🍚","叉烧饭":"🍚","海南鸡饭":"🍚","咖喱饭":"🍛","蛋包饭":"🍳","兰州拉面":"🍜","炸酱面":"🍜","热干面":"🍜","担担面":"🍜","牛肉面":"🍜","水煮鱼":"🐟","酸菜鱼":"🐟","青椒肉丝饭":"🍚","鱼香茄子饭":"🍚","辣子鸡":"🍗","白切鸡":"🍗","烤鸭饭":"🦆","火锅":"🫕","麻辣烫":"🍲","串串香":"🍢","烤鱼":"🐟","韩式烤肉":"🥩","日式拉面":"🍜","寿司":"🍣","披萨":"🍕","意面":"🍝","牛排":"🥩","部队锅":"🍲","石锅拌饭":"🍚","寿喜烧":"🍲","麻辣香锅":"🍲","椰子鸡":"🥥","烤串":"🍢","沙拉":"🥗","铁板烧":"🍳","珍珠奶茶":"🧋","冰淇淋":"🍦","蛋糕":"🎂","蛋挞":"🥧","泡芙":"🥧","章鱼小丸子":"🐙","鸡排":"🍗","臭豆腐":"🧀","糖葫芦":"🍡","双皮奶":"🥛","杨枝甘露":"🥭","冰粉":"🧊","凉皮":"🫓","肉夹馍":"🥙","糯米鸡":"🍙","炸鸡":"🍗","关东煮":"🍢","烤红薯":"🍠","奶茶":"🧋","可丽饼":"🥞","油条":"🥖"};
+function ge(n){return EMO[n]||"🍽️"}
+var S={meal:"breakfast",cats:new Set(),rot:0,spin:false,food:null,cnt:0,cur:[]};
+var ca=document.getElementById("wheelCanvas"),cx=ca.getContext("2d"),wc=document.getElementById("wheelContainer");
+var mt=document.querySelectorAll(".meal-tab"),ct=document.getElementById("categoryTags");
+var sb=document.getElementById("spinBtn"),sc=document.getElementById("spinCount");
+var rc=document.getElementById("resultCard"),re=document.getElementById("resultEmoji"),rl=document.getElementById("resultLabel"),rn=document.getElementById("resultName"),rs=document.getElementById("resultSub");
+var SC=["#FF6B6B","#FFB347","#4ECDC4","#45B7D1","#96CEB4","#FFEAA7","#DDA0DD","#98D8C8","#F7DC6F","#BB8FCE","#85C1E9","#F8C471","#82E0AA","#F1948A","#85929E","#ECC0B0","#A3E4D7","#FAD7A0","#AED6F1","#D7BDE2","#F9E79F","#A9DFBF","#F5B7B1","#AEB6BF","#EDBB99","#D5F5E3","#FCF3CF","#D6EAF8","#FADBD8","#E8DAEF"];
+function h2r(h){var x=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(h);return x?{r:parseInt(x[1],16),g:parseInt(x[2],16),b:parseInt(x[3],16)}:{r:0,g:0,b:0}}
+function isL(h){var c=h2r(h);return(c.r*299+c.g*587+c.b*114)/1000>160}
+function lgt(h,p){var c=h2r(h),a=Math.round(2.55*p);return"rgb("+Math.min(255,c.r+a)+","+Math.min(255,c.g+a)+","+Math.min(255,c.b+a)+")"}
+function sz(){var r=wc.getBoundingClientRect(),s=Math.min(r.width,380),d=window.devicePixelRatio||1;ca.width=s*d;ca.height=s*d;ca.style.width=s+"px";ca.style.height=s+"px";cx.scale(d,d);return s}
+function draw(s,rd){
+ var cx2=s/2,cy2=s/2,r=s/2-4,f=S.cur,n=f.length;cx.clearRect(0,0,s,s);
+ if(!n){cx.save();cx.beginPath();cx.arc(cx2,cy2,r,0,Math.PI*2);cx.fillStyle="#f0ece8";cx.fill();cx.fillStyle="#bbb";cx.font=(s*0.05)+"px sans-serif";cx.textAlign="center";cx.textBaseline="middle";cx.fillText("暂无匹配食物",cx2,cy2);cx.restore();return}
+ var sa=Math.PI*2/n,rr=rd*Math.PI/180;cx.save();cx.translate(cx2,cy2);cx.rotate(rr);
+ for(var i=0;i<n;i++){var a=i*sa,b=a+sa,c=SC[i%SC.length];cx.beginPath();cx.moveTo(0,0);cx.arc(0,0,r,a,b);cx.closePath();var g=cx.createRadialGradient(0,0,r*0.15,0,0,r);g.addColorStop(0,lgt(c,25));g.addColorStop(1,c);cx.fillStyle=g;cx.fill();cx.strokeStyle="rgba(255,255,255,0.35)";cx.lineWidth=1.5;cx.stroke();
+  var m=a+sa/2,tr=r*0.60,fs=Math.max(9.5,Math.min(13.5,s*0.037-(n>16?1.8:0))),nm=f[i].name,dn=nm.length>5?nm.slice(0,4)+"..":nm;
+  cx.save();cx.rotate(m);cx.translate(tr,0);cx.rotate(Math.PI/2);var no=((m%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
+  if(no>Math.PI/2&&no<Math.PI*1.5){cx.rotate(Math.PI);cx.textAlign="right"}else{cx.textAlign="left"}
+  cx.font="bold "+fs+'px -apple-system,"PingFang SC","Microsoft YaHei",sans-serif';
+  cx.fillStyle=isL(c)?"#2c3e50":"#ffffff";cx.shadowColor="rgba(0,0,0,0.12)";cx.shadowBlur=2;cx.fillText(dn,0,fs*0.35);cx.shadowBlur=0;cx.restore()}
+ var cr=r*0.16,cd=cx.createRadialGradient(0,0,0,0,0,cr);cd.addColorStop(0,"#fff5f0");cd.addColorStop(1,"#f0d5c0");
+ cx.beginPath();cx.arc(0,0,cr,0,Math.PI*2);cx.fillStyle=cd;cx.fill();cx.strokeStyle="#e0c0a8";cx.lineWidth=2;cx.stroke();
+ cx.fillStyle="#8b6f5e";cx.font="bold "+(s*0.045)+'px -apple-system,"PingFang SC","Microsoft YaHei",sans-serif';
+ cx.textAlign="center";cx.textBaseline="middle";cx.fillText("吃",0,0);cx.restore()}
+function filt(){var m=S.meal,f=FOODS.filter(function(x){return x.meals.indexOf(m)>=0});if(S.cats.size>0){f=f.filter(function(x){return x.cats.some(function(c){return S.cats.has(c)})})}for(var i=f.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=f[i];f[i]=f[j];f[j]=t}return f.slice(0,20)}
+function gac(){var m=S.meal,mf=FOODS.filter(function(x){return x.meals.indexOf(m)>=0}),cs=new Set();mf.forEach(function(f){f.cats.forEach(function(c){cs.add(c)})});return CATS.filter(function(c){return cs.has(c)})}
+function drawW(){var s=ca.width/(window.devicePixelRatio||1);if(s>0)draw(s,S.rot)}
+function upd(){
+ mt.forEach(function(t){t.classList.toggle("active",t.dataset.meal===S.meal)});
+ ct.innerHTML="";var av=gac(),all=S.cats.size===0;
+ var at=document.createElement("span");at.className="category-tag"+(all?" active":"");at.textContent="全部";
+ at.addEventListener("click",function(){S.cats.clear();upd()});ct.appendChild(at);
+ av.forEach(function(c){var t=document.createElement("span");var a=S.cats.has(c);t.className="category-tag"+(a?" active":"");t.textContent=c;
+ t.addEventListener("click",function(){if(S.cats.has(c)){S.cats.delete(c)}else{S.cats.add(c)}upd()});ct.appendChild(t)});
+ S.cur=filt();drawW();
+ if(S.food){var ok=S.cur.some(function(f){return f.name===S.food.name});if(!ok){S.food=null;rc.classList.remove("show")}}
+ sc.textContent=S.cnt>0?"已转 "+S.cnt+" 次":"";sb.disabled=S.cur.length===0||S.spin}
+function spin(){
+ if(S.spin||!S.cur.length)return;S.spin=true;sb.disabled=true;sb.classList.add("spinning");sb.textContent="🌀 旋转中...";rc.classList.remove("show");
+ var n=S.cur.length,sd=360/n,ti=Math.floor(Math.random()*n),off=Math.random()*sd*0.8+sd*0.1;
+ var tr=270-(ti*sd+off);tr=((tr%360)+360)%360;tr+=(5+Math.floor(Math.random()*5))*360;
+ var cr=S.rot,tt=tr,ft=cr+tt,dr=3500+Math.random()*1500,st=performance.now();
+ function ez(t){return 1-Math.pow(1-t,3)}
+ function an(now){var e=now-st,p=Math.min(e/dr,1);S.rot=cr+tt*ez(p);drawW();if(p<1){requestAnimationFrame(an)}else{S.rot=ft;end()}}
+ requestAnimationFrame(an)}
+function end(){
+ var n=S.cur.length,sd=360/n,nm=((270-(S.rot%360))+360)%360,idx=Math.min(Math.floor(nm/sd),n-1),fd=S.cur[idx];
+ S.spin=false;sb.classList.remove("spinning");sb.textContent="转一转";sb.disabled=false;S.food=fd;S.cnt++;
+ var mi=MMAP[S.meal];re.textContent=ge(fd.name);rl.textContent="今日"+mi.label+"推荐";rn.textContent=fd.name;
+ rs.textContent="第 "+S.cnt+" 次转到的美味！";rc.classList.add("show");rc.classList.remove("shake");
+ setTimeout(function(){rc.classList.add("shake")},50);drawW();sc.textContent="已转 "+S.cnt+" 次"}
+function pr(e){e.preventDefault()}
+function init(){
+ function dr(){sz();drawW()}
+ if(window.ResizeObserver){new ResizeObserver(dr).observe(wc)}
+ window.addEventListener("resize",dr);setTimeout(dr,50);
+ mt.forEach(function(t){t.addEventListener("click",function(){if(S.spin)return;S.meal=t.dataset.meal;S.cats.clear();S.food=null;rc.classList.remove("show");upd()})});
+ sb.addEventListener("click",spin);
+ ca.addEventListener("touchstart",pr,{passive:false});ca.addEventListener("touchmove",pr,{passive:false});ca.addEventListener("touchend",pr,{passive:false});ca.addEventListener("touchcancel",pr,{passive:false});
+ wc.addEventListener("touchstart",pr,{passive:false});wc.addEventListener("touchmove",pr,{passive:false});
+ upd()}
+if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",init)}else{init()}
+})();
+</script>
+</body>
+</html>
