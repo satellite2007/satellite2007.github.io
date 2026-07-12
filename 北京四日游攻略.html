@@ -1,0 +1,513 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>北京四日游攻略 · 2026.8.24-8.27</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #f5f5f7; color: #1d1d1f; line-height: 1.6; }
+.hero { background: linear-gradient(135deg, #8B0000 0%, #C41E3A 40%, #DC143C 100%); color: #fff; padding: 60px 20px 50px; text-align: center; position: relative; overflow: hidden; }
+.hero h1 { font-size: 2.6em; font-weight: 700; letter-spacing: 2px; position: relative; }
+.hero p { font-size: 1.1em; margin-top: 10px; opacity: 0.9; position: relative; }
+.hero .date-badge { display: inline-block; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 6px 18px; margin-top: 14px; font-size: 0.95em; position: relative; }
+.container { max-width: 1000px; margin: 0 auto; padding: 30px 20px 60px; }
+.day-card { background: #fff; border-radius: 16px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden; }
+.day-header { padding: 20px 24px 14px; border-bottom: 1px solid #eee; }
+.day-header .day-num { display: inline-block; background: #C41E3A; color: #fff; font-size: 0.8em; font-weight: 600; padding: 3px 12px; border-radius: 12px; margin-bottom: 4px; }
+.day-header h2 { font-size: 1.3em; margin-top: 4px; }
+.day-header .day-sub { font-size: 0.9em; color: #86868b; margin-top: 2px; }
+.day-body { padding: 20px 24px 24px; }
+.day-body h3 { font-size: 1em; color: #C41E3A; margin: 18px 0 8px; font-weight: 600; }
+.day-body h3:first-child { margin-top: 0; }
+.day-body p, .day-body li { font-size: 0.95em; color: #333; }
+.day-body ul { padding-left: 18px; margin: 6px 0 10px; list-style: none; }
+.day-body ul li { margin-bottom: 6px; padding-left: 4px; }
+.day-body ul li strong { color: #C41E3A; }
+.route { background: #f0f7ff; border-left: 3px solid #0066cc; border-radius: 0 8px 8px 0; padding: 10px 14px; margin: 6px 0 10px; font-size: 0.88em; }
+.route .from { color: #0066cc; font-weight: 600; }
+.route .arrow { color: #888; margin: 0 4px; }
+.route .to { color: #0066cc; font-weight: 600; }
+.route .via { color: #666; }
+.tag { display: inline-block; background: #f0f0f0; border-radius: 6px; padding: 2px 10px; font-size: 0.8em; color: #555; margin: 2px 2px; }
+.tag.red { background: #fce8ea; color: #C41E3A; }
+.tag.blue { background: #e3f0ff; color: #0066cc; }
+.tag.green { background: #e3f7ea; color: #1a8a4a; }
+.tag.orange { background: #fff3e0; color: #cc7700; }
+.highlight-box { background: #fef9e7; border-left: 3px solid #f1c40f; border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 10px 0; font-size: 0.9em; }
+.highlight-box strong { color: #C41E3A; }
+.map-box { background: #f9f9fb; border: 1px solid #e0e0e5; border-radius: 12px; padding: 14px 18px; margin: 12px 0; font-size: 0.88em; line-height: 1.7; }
+.map-box .dir { font-family: 'Consolas', 'SF Mono', monospace; font-size: 0.85em; color: #666; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 8px 0; }
+.two-col .col { background: #fafafa; border-radius: 10px; padding: 12px 14px; }
+.two-col .col h4 { font-size: 0.9em; margin-bottom: 6px; color: #333; }
+.two-col .col p { font-size: 0.85em; color: #555; margin-bottom: 2px; }
+.info-row { display: flex; gap: 12px; margin: 6px 0; font-size: 0.9em; }
+.info-row .label { color: #86868b; min-width: 60px; flex-shrink: 0; }
+.section-title { font-size: 1.5em; margin: 40px 0 16px; color: #1d1d1f; }
+.footer { text-align: center; padding: 30px; color: #86868b; font-size: 0.85em; border-top: 1px solid #ddd; margin-top: 20px; }
+.table-wrap { overflow-x: auto; margin: 10px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
+table th { background: #f5f5f7; color: #333; font-weight: 600; text-align: left; padding: 10px 12px; border-bottom: 2px solid #ddd; }
+table td { padding: 10px 12px; border-bottom: 1px solid #eee; }
+table tr:last-child td { border-bottom: none; }
+table .col-num { text-align: center; color: #C41E3A; font-weight: 600; }
+@media (max-width: 680px) {
+  .hero h1 { font-size: 1.8em; }
+  .two-col { grid-template-columns: 1fr; }
+  .day-body { padding: 14px 16px 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>北京四日游攻略</h1>
+  <p>南京南 to 北京 | 2026.8.24 - 8.27</p>
+  <div class="date-badge">4天3晚 含环球影城 全季通州环球店</div>
+</div>
+
+<div class="container">
+<h2 class="section-title">行程总览</h2>
+<div class="day-card" style="padding:20px 24px;">
+<table>
+  <tr><td style="font-weight:600;min-width:80px">Day 1 周一</td><td>8/24</td><td>南京南-北京南 | 全季通州环球店入住 | 前门/天安门夜游</td></tr>
+  <tr><td style="font-weight:600">Day 2 周二</td><td>8/25</td><td>环球影城全天（酒店步行即到）</td></tr>
+  <tr><td style="font-weight:600">Day 3 周三</td><td>8/26</td><td>天安门-故宫-景山-什刹海/后海-簋街（一路向北不回头）</td></tr>
+  <tr><td style="font-weight:600">Day 4 周四</td><td>8/27</td><td>天坛-前门午餐-北京南站-南京南</td></tr>
+</table>
+</div>
+
+<h2 class="section-title">景点位置关系</h2>
+<div class="day-card">
+<div class="day-body">
+  <div class="day-card" style="padding:20px;">
+  <div style="text-align:center;margin-bottom:12px;"><strong>北京景点位置示意图</strong>  <span style="font-size:0.8em;color:#999;">（绿色=Day3路线，蓝色=Day4路线）</span></div>
+  <svg viewBox="0 0 520 590" style="width:100%;max-width:520px;display:block;margin:0 auto;" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="dot-g" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="12" markerHeight="12"><circle cx="6" cy="6" r="5" fill="#2e7d32"/></marker>
+      <marker id="dot-b" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="12" markerHeight="12"><circle cx="6" cy="6" r="5" fill="#1565c0"/></marker>
+    </defs>
+    <rect width="520" height="590" fill="#f8fafc" rx="12"/>
+    <ellipse cx="248" cy="260" rx="100" ry="90" fill="none" stroke="#e0e0e0" stroke-width="1.5" stroke-dasharray="6,4"/>
+    <text x="248" y="165" fill="#bbb" font-size="10" text-anchor="middle">二环</text>
+    <ellipse cx="248" cy="260" rx="170" ry="140" fill="none" stroke="#e0e0e0" stroke-width="1" stroke-dasharray="4,4"/>
+    <text x="248" y="115" fill="#ccc" font-size="9" text-anchor="middle">三环</text>
+    <ellipse cx="248" cy="260" rx="240" ry="200" fill="none" stroke="#eee" stroke-width="0.8" stroke-dasharray="3,4"/>
+    <text x="248" y="55" fill="#ddd" font-size="9" text-anchor="middle">四环</text>
+    <line x1="70" y1="260" x2="420" y2="260" stroke="#c62828" stroke-width="2.5" opacity="0.5"/>
+    <text x="425" y="264" fill="#c62828" font-size="8">1号线</text>
+    <rect x="170" y="185" width="156" height="150" rx="20" fill="none" stroke="#0288d1" stroke-width="2" opacity="0.4"/>
+    <text x="170" y="180" fill="#0288d1" font-size="8">2号线</text>
+    <line x1="130" y1="80" x2="130" y2="530" stroke="#00acc1" stroke-width="2" opacity="0.4"/>
+    <text x="98" y="82" fill="#00acc1" font-size="8">4号线</text>
+    <line x1="290" y1="80" x2="290" y2="530" stroke="#ff6f00" stroke-width="2" opacity="0.4"/>
+    <text x="288" y="78" fill="#ff6f00" font-size="8">5号线</text>
+    <line x1="60" y1="340" x2="460" y2="340" stroke="#7b1fa2" stroke-width="2.5" opacity="0.4"/>
+    <text x="462" y="344" fill="#7b1fa2" font-size="8">7号线</text>
+    <line x1="230" y1="80" x2="230" y2="400" stroke="#1565c0" stroke-width="1.8" opacity="0.35"/>
+    <rect x="410" y="340" width="80" height="28" rx="6" fill="#fff" stroke="#7b1fa2" stroke-width="2"/>
+    <text x="450" y="358" fill="#7b1fa2" font-size="9" text-anchor="middle" font-weight="bold">全季通州环球店</text>
+    <text x="450" y="378" fill="#999" font-size="8" text-anchor="middle">7号线环球度假区站</text>
+    <circle cx="450" cy="335" r="5" fill="#7b1fa2"/>
+    <text x="450" y="338" fill="#fff" font-size="7" text-anchor="middle" font-weight="bold">H</text>
+    <rect x="410" y="295" width="80" height="22" rx="6" fill="#fce4ec" stroke="#c62828" stroke-width="1.2"/>
+    <text x="450" y="310" fill="#c62828" font-size="9" text-anchor="middle" font-weight="bold">环球影城</text>
+    <polyline points="248,310 248,260 248,220 230,195 290,205" fill="none" stroke="#2e7d32" stroke-width="2.5" stroke-dasharray="6,3"/>
+    <text x="260" y="335" fill="#2e7d32" font-size="8">Day3</text>
+    <polyline points="450,345 290,365 290,340 250,310 220,370" fill="none" stroke="#1565c0" stroke-width="2" stroke-dasharray="6,3"/>
+    <text x="380" y="385" fill="#1565c0" font-size="8">Day4</text>
+    <circle cx="90" cy="105" r="3" fill="#bbb"/>
+    <text x="90" y="95" fill="#999" font-size="9" text-anchor="middle">颐和园</text>
+    <circle cx="230" cy="195" r="5" fill="#2e7d32"/>
+    <text x="195" y="178" fill="#2e7d32" font-size="11" text-anchor="middle" font-weight="bold">什刹海/后海</text>
+    <circle cx="290" cy="205" r="5" fill="#2e7d32"/>
+    <text x="290" y="192" fill="#2e7d32" font-size="11" text-anchor="middle" font-weight="bold">簋街</text>
+    <circle cx="248" cy="220" r="5" fill="#2e7d32"/>
+    <text x="248" y="208" fill="#2e7d32" font-size="11" text-anchor="middle" font-weight="bold">景山公园</text>
+    <rect x="218" y="240" width="60" height="25" rx="4" fill="#fff3e0" stroke="#e65100" stroke-width="1.5"/>
+    <text x="248" y="256" fill="#e65100" font-size="11" text-anchor="middle" font-weight="bold">故宫</text>
+    <rect x="218" y="278" width="60" height="20" rx="4" fill="#fce8ea" stroke="#C41E3A" stroke-width="1.2"/>
+    <text x="248" y="292" fill="#C41E3A" font-size="10" text-anchor="middle" font-weight="bold">天安门广场</text>
+    <circle cx="248" cy="310" r="4" fill="#7b1fa2"/>
+    <text x="248" y="325" fill="#7b1fa2" font-size="10" text-anchor="middle" font-weight="bold">前门/大栅栏</text>
+    <circle cx="290" cy="365" r="5" fill="#1565c0"/>
+    <text x="290" y="352" fill="#1565c0" font-size="11" text-anchor="middle" font-weight="bold">天坛</text>
+    <rect x="195" y="380" width="50" height="20" rx="6" fill="#e3f2fd" stroke="#1565c0" stroke-width="1.2"/>
+    <text x="220" y="393" fill="#1565c0" font-size="9" text-anchor="middle" font-weight="bold">北京南站</text>
+    <rect x="10" y="540" width="500" height="38" rx="6" fill="#f5f5f5"/>
+    <circle cx="30" cy="560" r="4" fill="#2e7d32"/><text x="40" y="563" fill="#666" font-size="9">Day3向北</text>
+    <circle cx="130" cy="560" r="4" fill="#1565c0"/><text x="140" y="563" fill="#666" font-size="9">Day4向南</text>
+    <circle cx="230" cy="560" r="4" fill="#e65100"/><text x="240" y="563" fill="#666" font-size="9">景点</text>
+    <line x1="320" y1="557" x2="350" y2="557" stroke="#7b1fa2" stroke-width="3"/><text x="355" y="563" fill="#666" font-size="9">7号线</text>
+    <line x1="320" y1="567" x2="350" y2="567" stroke="#c62828" stroke-width="3"/><text x="355" y="573" fill="#666" font-size="9">1号线</text>
+  </svg>
+</div>
+
+<h2 class="section-title">大交通 高铁推荐车次</h2>
+
+<div class="day-card">
+<div class="day-header">
+  <h2>去程：南京南  to  北京南</h2>
+  <div class="day-sub">8月24日（周一） 全程约4h  二等座约 550</div>
+</div>
+<div class="day-body">
+  <table>
+    <tr><th>推荐</th><th>车次</th><th>出发</th><th>到达</th><th>用时</th><th>二等座</th></tr>
+    <tr><td class="col-num">*</td><td><strong>G548</strong></td><td>08:43</td><td>12:39</td><td>4h00m</td><td>约 550</td></tr>
+  </table>
+  <div class="highlight-box">建议G548(08:43-12:39)，中午12:39到北京南站，下午有充足时间逛前门和天安门。</div>
+</div></div>
+
+<div class="day-card">
+<div class="day-header">
+  <h2>返程：北京南  to  南京南</h2>
+  <div class="day-sub">8月27日（周四）</div>
+</div>
+<div class="day-body">
+  <table>
+    <tr><th>推荐</th><th>车次</th><th>出发</th><th>到达</th><th>用时</th><th>二等座</th></tr>
+    <tr><td class="col-num">*</td><td><strong>G751</strong></td><td>14:56</td><td>18:20</td><td>4h09m</td><td>约 550</td></tr>
+  </table>
+  <div class="highlight-box">G751(14:56-18:20)，下午2:56北京南站发车，前门吃午饭后12:30出发完全来得及。</div>
+</div></div>
+
+<h2 class="section-title">住宿安排</h2>
+<div class="day-card">
+<div class="day-header">
+  <h2>全季酒店 北京通州环球度假区店</h2>
+  <div class="day-sub">通州区颐瑞东路 | 7号线环球度假区站旁</div>
+</div>
+<div class="day-body">
+  <div class="route">
+    <span class="from">环球度假区站</span> <span class="arrow">步行5分钟</span> <span class="to">全季酒店</span><br>
+    <span class="from">环球度假区站</span> <span class="arrow">步行10分钟</span> <span class="to">北京环球影城入园大门</span>
+  </div>
+  <p>价格参考：约 500-650/晚（暑期旺季），3晚约 1,500-1,950</p>
+  <p style="margin-top:6px;"><strong>选这里的原因：</strong></p>
+  <ul>
+    <li>Day2 步行10分钟到环球影城，不用早起赶路</li>
+    <li>地铁7号线直达市中心前门（约35min），去故宫天坛都很方便</li>
+    <li>Day4 天坛在东南方向，酒店也在东边，路线顺</li>
+  </ul>
+  <div class="highlight-box">
+    <strong>北京南站到酒店：</strong><br>
+    北京南站 4号线（天宫院方向 6站）菜市口站 换乘 7号线（环球度假区方向 15站）环球度假区站 步行5分钟到酒店<br>
+    全程约55分钟。打车约60-80元，35分钟。
+  </div>
+</div></div>
+
+<h2 class="section-title">每日详细安排</h2>
+
+<!-- Day 1 -->
+<div class="day-card">
+<div class="day-header">
+  <span class="day-num">Day 1 | 8/24 周一</span>
+  <h2>抵达 酒店 前门/天安门夜游</h2>
+  <div class="day-sub">路线：北京南站（南）-酒店（东）-前门/天安门（中）-回酒店</div>
+</div>
+<div class="day-body">
+
+  <h3>08:43-12:39 高铁出发 (G548)</h3>
+  <div class="route">
+    <span class="from">南京南站</span> <span class="arrow">G548 约4h</span> <span class="to">北京南站</span>
+  </div>
+
+  <h3>12:30-13:30 前往酒店</h3>
+  <div class="route">
+    <span class="from">北京南站</span>
+    <span class="arrow">4号线 菜市口方向 6站</span> <span class="via">菜市口换7号线</span>
+    <span class="arrow">7号线 环球度假区方向 15站</span>
+    <span class="to">环球度假区站 步行5分 全季酒店</span><br>
+    <span style="color:#999;">约55分钟 | 打车约35分钟 60-80元</span>
+  </div>
+  <ul>
+    <li>到酒店办入住、放下行李</li>
+    <li>可以在酒店附近吃简餐（通州万达/梨园）</li>
+  </ul>
+
+  <h3>14:30-18:00 前门大街 大栅栏</h3>
+  <div class="route">
+    <span class="from">全季酒店</span>
+    <span class="arrow">步行5分 环球度假区站</span>
+    <span class="arrow">7号线 北京西站方向 14站</span>
+    <span class="via">珠市口站下车</span>
+    <span class="to">前门大街/大栅栏</span><br>
+    <span style="color:#999;">约35分钟 | 7号线直达不用换乘</span>
+  </div>
+  <ul>
+    <li><span class="tag orange">美食</span> <strong>方砖厂69号炸酱面</strong> 前门店</li>
+    <li><span class="tag orange">美食</span> <strong>门框胡同百年卤煮</strong></li>
+  </ul>
+
+  <h3>18:00-20:00 天安门广场 晚餐</h3>
+  <div class="route">
+    <span class="from">前门大街</span>
+    <span class="arrow">步行8分钟向北穿过正阳门</span>
+    <span class="to">天安门广场</span>
+  </div>
+  <ul>
+    <li>天安门广场傍晚亮灯，记得提前预约（免费）</li>
+    <li><span class="tag orange">晚餐</span> <strong>四季民福烤鸭（前门店）</strong></li>
+  </ul>
+
+  <h3>20:30 回酒店</h3>
+  <div class="route">
+    <span class="from">前门站</span>
+    <span class="arrow">8号线 1站 珠市口</span>
+    <span class="via">换7号线</span>
+    <span class="arrow">7号线 14站 环球度假区</span>
+    <span class="to">全季酒店</span><br>
+    <span style="color:#999;">约40分钟 | 8号线坐1站到珠市口换7号线</span>
+  </div>
+</div></div>
+
+<!-- Day 2 -->
+<div class="day-card">
+<div class="day-header">
+  <span class="day-num">Day 2 | 8/25 周二</span>
+  <h2>环球影城全天</h2>
+  <div class="day-sub">路线：酒店 步行 环球影城 步行 酒店</div>
+</div>
+<div class="day-body">
+  <div class="route">
+    <span class="from">全季酒店</span>
+    <span class="arrow">步行10分钟</span>
+    <span class="to">北京环球影城入园大门</span>
+  </div>
+
+  <div class="highlight-box">
+    <strong>营业时间：</strong>暑期通常09:00-21:00<br>
+    <strong>票价：</strong>暑期约528-638/人<br>
+    <strong>建议买优速通</strong>约300-500 减少排队
+  </div>
+
+  <h3>推荐路线（逆时针）</h3>
+  <ul>
+    <li><strong>08:30</strong> 从酒店步行到园区排队</li>
+    <li><strong>09:00-10:00 哈利波特魔法世界</strong> 禁忌之旅/鹰马飞行</li>
+    <li><strong>10:00-11:00 侏罗纪世界</strong> 侏罗纪世界大冒险</li>
+    <li><strong>11:00-11:30 变形金刚</strong> 火种源争夺战</li>
+    <li><strong>11:30-12:30</strong> 午餐（功夫熊猫区 有空调）</li>
+    <li><strong>12:30-13:30 功夫熊猫</strong> 室内避暑</li>
+    <li><strong>13:30-14:30 未来水世界</strong> 特技表演</li>
+    <li><strong>14:30-15:30 小黄人乐园</strong></li>
+    <li><strong>15:30-16:30</strong> 二刷/逛商店/花车巡游</li>
+    <li><strong>16:30-17:30 好莱坞</strong> 特效表演</li>
+    <li><strong>17:30-18:30</strong> 晚餐（三把扫帚 哈利波特区）</li>
+    <li><strong>19:00-20:00</strong> 霍格沃茨灯光秀 步行回酒店</li>
+  </ul>
+</div></div>
+
+<!-- Day 3 -->
+<div class="day-card">
+<div class="day-header">
+  <span class="day-num">Day 3 | 8/26 周三</span>
+  <h2>天安门 故宫 景山 什刹海/后海 簋街</h2>
+  <div class="day-sub">一路向北不回头！路线：酒店（东）-天安门/故宫（中）-景山（中）-什刹海/后海-簋街（北）-回酒店</div>
+</div>
+<div class="day-body">
+
+  <h3>08:30-09:20 酒店 到 天安门东站</h3>
+  <div class="route">
+    <span class="from">全季酒店</span>
+    <span class="arrow">步行5分 环球度假区站</span>
+    <span class="arrow">7号线 北京西站方向 11站</span>
+    <span class="via">磁器口换5号线</span>
+    <span class="arrow">5号线 天通苑北方向 2站</span>
+    <span class="via">东单换1号线</span>
+    <span class="arrow">1号线 古城方向 2站</span>
+    <span class="to">天安门东站</span><br>
+    <span style="color:#999;">约50分钟 | 7-5-1换乘两次</span>
+  </div>
+
+  <h3>09:30-09:45 天安门广场</h3>
+  <div class="route">
+    <span class="from">天安门东站</span>
+    <span class="arrow">步行3分钟</span>
+    <span class="to">天安门广场</span>
+  </div>
+
+  <h3>09:45-12:30 故宫博物院</h3>
+  <div class="route">
+    <span class="from">天安门广场</span>
+    <span class="arrow">步行5分钟向北</span>
+    <span class="to">故宫午门（入口）</span>
+    <span class="arrow">一路向北游览</span>
+    <span class="to">神武门（出口）</span><br>
+    <span style="color:#999;">中轴线+西六宫：午门-太和殿-中和殿-保和殿-乾清宫-坤宁宫-西六宫-御花园-神武门</span>
+  </div>
+
+  <h3>12:30-13:30 午餐</h3>
+  <div class="route">
+    <span class="from">神武门（故宫北门）</span>
+    <span class="arrow">步行5分钟</span>
+    <span class="to">景山公园南门（附近午餐）</span>
+  </div>
+
+  <h3>13:30-14:30 景山公园</h3>
+  <div class="route">
+    <span class="from">景山南门</span>
+    <span class="arrow">爬上万春亭 俯瞰故宫全景</span>
+    <span class="to">景山西门出</span>
+  </div>
+
+  <h3>14:30-16:30 什刹海/后海</h3>
+  <div class="route">
+    <span class="from">景山公园西门</span>
+    <span class="arrow">步行15分（或骑行5分）经陟山门街-北海-恭王府</span>
+    <span class="to">什刹海/后海</span>
+    <span class="arrow">沿前海步行街</span>
+    <span class="to">什刹海/后海</span><br>
+    <span style="color:#999;">一路胡同风情 文宇奶酪 姚记炒肝</span>
+  </div>
+
+  <h3>17:00-19:00 簋街晚餐</h3>
+  <div class="route">
+    <span class="from">什刹海北口</span>
+    <span class="arrow">步行10分钟向东</span>
+    <span class="to">簋街（东直门内大街）</span><br>
+    <span style="color:#999;">推荐：胡大饭馆（麻小） 花家怡园（北京菜）</span>
+  </div>
+
+  <h3>19:30 回酒店</h3>
+  <div class="route">
+    <span class="from">北新桥站（簋街）</span>
+    <span class="arrow">5号线 宋家庄方向 4站</span>
+    <span class="via">磁器口换7号线</span>
+    <span class="arrow">7号线 环球度假区方向 11站</span>
+    <span class="to">环球度假区站 全季酒店</span><br>
+    <span style="color:#999;">约45分钟 | 5号线北新桥->磁器口->7号线</span>
+  </div>
+
+  <div class="highlight-box">
+    <strong>Day3纯直线不回头：</strong><br>
+    天安门（最南）-向北-故宫-向北-景山-向北-什刹海/后海-向东-簋街<br>
+    一路玩过去，最后从簋街坐地铁回酒店。
+  </div>
+</div></div>
+
+<!-- Day 4 -->
+<div class="day-card">
+<div class="day-header">
+  <span class="day-num">Day 4 | 8/27 周四</span>
+  <h2>天坛 前门午餐 北京南站返程</h2>
+  <div class="day-sub">路线：酒店（东）-天坛（东南）-前门（中）-北京南站（南）-南京</div>
+</div>
+<div class="day-body">
+
+  <h3>08:30-09:05 酒店 到 天坛</h3>
+  <div class="route">
+    <span class="from">全季酒店</span>
+    <span class="arrow">步行5分 环球度假区站</span>
+    <span class="arrow">7号线 北京西站方向 11站</span>
+    <span class="via">磁器口换5号线</span>
+    <span class="arrow">5号线 宋家庄方向 1站</span>
+    <span class="to">天坛东门站</span><br>
+    <span style="color:#999;">约35分钟 | 7号线到磁器口 换5号线1站</span>
+  </div>
+
+  <h3>09:05-11:00 天坛公园</h3>
+  <ul>
+    <li>门票旺季联票约34（含祈年殿 回音壁）</li>
+    <li>必看：祈年殿 圜丘坛 回音壁</li>
+  </ul>
+
+  <h3>11:00-11:20 天坛 到 前门</h3>
+  <div class="route">
+    <span class="from">天坛东门站</span>
+    <span class="arrow">5号线 天通苑北方向 2站</span>
+    <span class="via">崇文门换2号线</span>
+    <span class="arrow">2号线 内环 1站</span>
+    <span class="to">前门站</span><br>
+    <span style="color:#999;">约15分钟 | 或天坛西门公交120路到前门约20分</span>
+  </div>
+
+  <h3>11:20-12:30 前门午餐 补货</h3>
+  <ul>
+    <li>补吃前门漏掉的美食 买点特产</li>
+  </ul>
+
+  <h3>12:30-13:00 前门 到 北京南站</h3>
+  <div class="route">
+    <span class="from">前门站</span>
+    <span class="arrow">2号线 内环 2站</span>
+    <span class="via">宣武门换4号线</span>
+    <span class="arrow">4号线 天宫院方向 3站</span>
+    <span class="to">北京南站</span><br>
+    <span style="color:#999;">约20分钟 | 或打车约15分 20元 | G751(14:56发车) 到站后约2h富余时间<span style="color:#999;">约20分钟 | 或打车约15分 20元 | G751(14:56发车) 到站后约2h富余时间</span>
+  </div>
+
+  <h3>14:56-18:20 高铁回南京 (G751)</h3>
+  <div class="route">
+    <span class="from">北京南站</span>
+    <span class="arrow">G751 约4h09m</span>
+    <span class="to">南京南站</span>
+  </div>
+  <div class="highlight-box">
+    <strong>Day4顺路线：</strong><br>
+    酒店（东）-天坛（东南）-前门（中）-北京南站（南）-南京<br>
+    一路向东向南不绕路。如果想去颐和园，它在西北方向较远，建议留到下次。
+  </div>
+</div></div>
+
+<h2 class="section-title">北京必吃美食清单</h2>
+<div class="day-card">
+<div class="day-body">
+  <table>
+    <tr><th>美食</th><th>推荐店铺</th><th>人均</th></tr>
+    <tr><td><strong>北京烤鸭</strong></td><td>四季民福（前门店）大董 便宜坊</td><td>150-200</td></tr>
+    <tr><td><strong>炸酱面</strong></td><td>方砖厂69号炸酱面 海碗居</td><td>30-40</td></tr>
+    <tr><td><strong>卤煮火烧</strong></td><td>门框胡同百年卤煮</td><td>30-50</td></tr>
+    <tr><td><strong>铜锅涮肉</strong></td><td>聚宝源（牛街）东来顺</td><td>100-150</td></tr>
+    <tr><td><strong>豆汁儿焦圈</strong></td><td>护国寺小吃 锦芳小吃</td><td>15-25</td></tr>
+    <tr><td><strong>驴打滚/豌豆黄</strong></td><td>护国寺小吃 牛街清真</td><td>10-20</td></tr>
+    <tr><td><strong>麻小</strong></td><td>胡大饭馆（簋街）</td><td>100-200</td></tr>
+    <tr><td><strong>炙子烤肉</strong></td><td>烤肉季 烤肉宛</td><td>80-120</td></tr>
+  </table>
+</div></div>
+
+<h2 class="section-title">预算参考（单人）</h2>
+<div class="day-card">
+<div class="day-body">
+  <table>
+    <tr><th>项目</th><th>预估费用</th><th>说明</th></tr>
+    <tr><td>高铁往返</td><td>1,100</td><td>G548去+G751回 各约¥550</td></tr>
+    <tr><td>住宿3晚</td><td>750-975</td><td>两人分摊 全季500-650/晚</td></tr>
+    <tr><td>环球影城</td><td>528-638</td><td>暑期单日票</td></tr>
+    <tr><td>优速通（可选）</td><td>300-500</td><td>旺季强烈推荐</td></tr>
+    <tr><td>景点门票</td><td>100-150</td><td>故宫60+景山2+天坛34</td></tr>
+    <tr><td>餐饮4天</td><td>600-800</td><td>正餐小吃</td></tr>
+    <tr><td>市内交通</td><td>80-120</td><td>地铁为主</td></tr>
+    <tr><td style="font-weight:600;">总计</td><td style="font-weight:600;color:#C41E3A;">3,458-4,283</td><td>不含优速通约3,158-3,783</td></tr>
+  </table>
+</div></div>
+
+<h2 class="section-title">实用贴士</h2>
+<div class="day-card">
+<div class="day-body">
+  <div class="info-row"><span class="label">App</span>铁路12306 环球影城 高德地图 美团</div>
+  <div class="info-row"><span class="label">天气</span>8月底22-32度 防晒带薄外套</div>
+  <div class="info-row"><span class="label">支付</span>微信支付宝全覆盖</div>
+  <div class="info-row"><span class="label">预约</span>故宫提前7天晚8点抢 天安门提前1-9天</div>
+  <div class="info-row"><span class="label">地铁</span>亿通行App或支付宝乘车码</div>
+  <div class="info-row"><span class="label">紧急</span>报警110 急救120 火灾119</div>
+</div></div>
+
+<div class="footer">
+  祝旅途愉快 北京欢迎你<br>
+  攻略制作于2026年7月12日 | 车次票价以12306实时为准
+</div>
+</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
