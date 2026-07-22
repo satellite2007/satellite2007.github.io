@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <title>星际防线</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f2f6f7;
+      --muted: #98a8ae;
+      --cyan: #50e3c2;
+      --amber: #ffb84c;
+      --danger: #ff5f57;
+      --panel: rgba(12, 22, 27, .82);
+      --line: rgba(158, 210, 218, .19);
+    }
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    body {
+      background: #03080b;
+      color: var(--ink);
+      font-family: "Microsoft YaHei UI", "PingFang SC", system-ui, sans-serif;
+      letter-spacing: 0;
+      touch-action: none;
+      user-select: none;
+    }
+    button { font: inherit; color: inherit; }
+    #game { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+    .noise {
+      position: fixed; inset: 0; pointer-events: none; opacity: .15;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.25'/%3E%3C/svg%3E");
+    }
+    .hud { position: fixed; inset: 0; pointer-events: none; }
+    .topbar {
+      position: absolute; top: max(18px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%);
+      width: min(94vw, 1120px); display: grid; grid-template-columns: 1fr auto 1fr; align-items: start;
+    }
+    .brand { display: flex; align-items: center; gap: 11px; }
+    .brand-mark { width: 28px; height: 28px; position: relative; transform: rotate(45deg); border: 2px solid var(--cyan); }
+    .brand-mark::after { content: ""; position: absolute; inset: 6px; background: var(--cyan); }
+    .brand strong { display:block; font-size: 14px; letter-spacing: 2px; }
+    .brand span { display:block; font-size: 10px; color: var(--muted); margin-top: 2px; letter-spacing: 1.5px; }
+    .score { text-align: center; }
+    .score small { display:block; color:var(--muted); font-size:10px; letter-spacing:2px; }
+    .score strong { display:block; font: 700 30px/1.15 ui-monospace, Consolas, monospace; }
+    .actions { justify-self: end; display:flex; gap:8px; pointer-events:auto; }
+    .icon-btn {
+      width: 38px; height: 38px; border: 1px solid var(--line); background: rgba(8,17,21,.66); border-radius: 4px;
+      display:grid; place-items:center; cursor:pointer; transition:.18s ease;
+    }
+    .icon-btn:hover { border-color: var(--cyan); background: rgba(22,45,47,.78); }
+    .icon-btn svg { width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:2; }
+    .status {
+      position:absolute; left: max(20px, calc((100vw - 1120px)/2)); bottom:max(24px, env(safe-area-inset-bottom));
+      width:min(270px, 40vw);
+    }
+    .status-row { display:flex; justify-content:space-between; align-items:center; color:var(--muted); font-size:11px; margin-bottom:7px; }
+    .status-row b { color:var(--ink); font:600 12px ui-monospace, monospace; }
+    .meter { height:5px; background:rgba(255,255,255,.1); overflow:hidden; }
+    .meter i { display:block; width:100%; height:100%; background:var(--cyan); transition:width .18s; }
+    .wave {
+      position:absolute; right:max(20px, calc((100vw - 1120px)/2)); bottom:max(24px, env(safe-area-inset-bottom));
+      text-align:right; color:var(--muted); font-size:11px;
+    }
+    .wave b { display:block; color:var(--amber); font:700 22px ui-monospace, monospace; margin-top:3px; }
+    .overlay {
+      position:fixed; inset:0; display:grid; place-items:center; padding:22px; background:rgba(1,6,8,.46);
+      backdrop-filter:blur(5px); transition:opacity .25s; z-index:4;
+    }
+    .overlay.hidden { opacity:0; pointer-events:none; }
+    .panel {
+      width:min(520px, 94vw); padding:36px 34px 30px; background:var(--panel); border:1px solid var(--line);
+      border-top:3px solid var(--cyan); border-radius:6px; box-shadow:0 30px 80px rgba(0,0,0,.5);
+    }
+    .eyebrow { color:var(--cyan); font-size:11px; letter-spacing:3px; margin-bottom:12px; }
+    h1 { font-size:clamp(30px, 7vw, 56px); line-height:1; margin:0 0 13px; font-weight:800; }
+    .subtitle { margin:0; color:var(--muted); font-size:14px; line-height:1.7; }
+    .controls { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:26px 0 24px; }
+    .control { border-top:1px solid var(--line); padding-top:12px; }
+    .control b { display:block; font-size:12px; margin-bottom:5px; }
+    .control span { color:var(--muted); font-size:11px; }
+    .primary {
+      width:100%; min-height:49px; border:0; border-radius:4px; background:var(--cyan); color:#03211b;
+      font-weight:800; cursor:pointer; transition:transform .15s, filter .15s;
+    }
+    .primary:hover { filter:brightness(1.1); transform:translateY(-1px); }
+    .best { text-align:center; color:var(--muted); font-size:11px; margin-top:14px; }
+    .best b { color:var(--amber); }
+    .touch { position:fixed; inset:auto 0 max(18px, env(safe-area-inset-bottom)); display:none; justify-content:space-between; padding:0 18px; pointer-events:none; z-index:3; }
+    .touch-pad { display:flex; gap:8px; pointer-events:auto; }
+    .touch button { width:58px; height:58px; border:1px solid var(--line); border-radius:50%; background:rgba(8,18,22,.55); backdrop-filter:blur(4px); touch-action:none; -webkit-touch-callout:none; -webkit-user-select:none; }
+    .touch .fire { width:72px; height:72px; color:var(--amber); border-color:rgba(255,184,76,.45); font-size:11px; font-weight:800; }
+    @media (hover:none), (pointer:coarse) {
+      .touch { display:flex; }
+      .status, .wave { bottom:100px; }
+    }
+    @media (max-width:620px) {
+      .topbar { grid-template-columns:1fr auto; }
+      .brand span { display:none; }
+      .score { position:absolute; top:50px; left:0; text-align:left; }
+      .score strong { font-size:24px; }
+      .panel { padding:28px 22px 24px; }
+      .controls { gap:7px; }
+      .status { width:44vw; left:18px; }
+      .wave { right:18px; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="game" aria-label="飞船打陨石游戏"></canvas>
+  <div class="noise"></div>
+  <main class="hud">
+    <div class="topbar">
+      <div class="brand"><i class="brand-mark"></i><div><strong>星际防线</strong><span>ORBITAL DEFENSE</span></div></div>
+      <div class="score"><small>作战积分</small><strong id="score">000000</strong></div>
+      <div class="actions">
+        <button class="icon-btn" id="sound" title="切换音效" aria-label="切换音效"><svg viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path id="soundWaves" d="M15 9a4 4 0 0 1 0 6m3-9a8 8 0 0 1 0 12"/></svg></button>
+        <button class="icon-btn" id="pause" title="暂停" aria-label="暂停"><svg viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg></button>
+      </div>
+    </div>
+    <div class="status"><div class="status-row"><span>护盾完整度</span><b id="hpText">100%</b></div><div class="meter"><i id="hpBar"></i></div></div>
+    <div class="wave">当前波次<b id="wave">WAVE 01</b></div>
+  </main>
+  <div class="touch" aria-label="触屏控制">
+    <div class="touch-pad"><button data-key="ArrowLeft" aria-label="向左">◀</button><button data-key="ArrowRight" aria-label="向右">▶</button></div>
+    <button class="fire" id="touchFire" aria-label="开火">开火</button>
+  </div>
+  <section class="overlay" id="overlay">
+    <div class="panel">
+      <div class="eyebrow" id="eyebrow">ORBITAL DEFENSE / 01</div>
+      <h1 id="title">星际防线</h1>
+      <p class="subtitle" id="subtitle">陨石群正在逼近近地轨道。驾驶拦截舰，守住最后一道防线。</p>
+      <div class="controls"><div class="control"><b>移动</b><span>A D / 方向键</span></div><div class="control"><b>射击</b><span>空格键</span></div><div class="control"><b>暂停</b><span>P / ESC</span></div></div>
+      <button class="primary" id="start">开始任务</button>
+      <div class="best">最高记录：<b id="best">000000</b></div>
+    </div>
+  </section>
+  <script>
+  (() => {
+    const canvas = document.querySelector('#game'), ctx = canvas.getContext('2d');
+    const $ = s => document.querySelector(s);
+    const ui = { score:$('#score'), hp:$('#hpText'), hpBar:$('#hpBar'), wave:$('#wave'), overlay:$('#overlay'), title:$('#title'), subtitle:$('#subtitle'), eyebrow:$('#eyebrow'), start:$('#start'), best:$('#best') };
+    let W=0,H=0,dpr=1,last=0,running=false,paused=false,score=0,hp=100,wave=1,spawnTimer=0,screenShake=0,soundOn=true,audio;
+    const keys={}, bullets=[], rocks=[], particles=[], stars=[];
+    let ship={x:0,y:0,vx:0,fire:0,invuln:0};
+    const rand=(a,b)=>a+Math.random()*(b-a), clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+    const bestScore=()=>Number(localStorage.getItem('orbital-best')||0);
+    ui.best.textContent=String(bestScore()).padStart(6,'0');
+
+    function resize(){
+      dpr=Math.min(devicePixelRatio||1,2); W=innerWidth; H=innerHeight;
+      canvas.width=W*dpr; canvas.height=H*dpr; canvas.style.width=W+'px'; canvas.style.height=H+'px'; ctx.setTransform(dpr,0,0,dpr,0,0);
+      ship.y=H-110; if(!ship.x) ship.x=W/2;
+      if(!stars.length) for(let i=0;i<140;i++) stars.push({x:Math.random()*W,y:Math.random()*H,z:rand(.2,1.2)});
+    }
+    addEventListener('resize',resize); resize();
+    function tone(freq,dur=.06,type='square',vol=.025){
+      if(!soundOn)return; audio ||= new (window.AudioContext||window.webkitAudioContext)();
+      const o=audio.createOscillator(),g=audio.createGain(); o.type=type;o.frequency.setValueAtTime(freq,audio.currentTime);g.gain.setValueAtTime(vol,audio.currentTime);g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+dur);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+dur);
+    }
+    function reset(){
+      bullets.length=rocks.length=particles.length=0; score=0;hp=100;wave=1;spawnTimer=0;screenShake=0;
+      ship={x:W/2,y:H-110,vx:0,fire:0,invuln:0}; updateUI();
+    }
+    function start(){ reset();running=true;paused=false;ui.overlay.classList.add('hidden');last=performance.now();requestAnimationFrame(loop);tone(220,.15,'sine',.04); }
+    function updateUI(){
+      ui.score.textContent=String(score).padStart(6,'0'); ui.hp.textContent=hp+'%';ui.hpBar.style.width=hp+'%';ui.hpBar.style.background=hp<35?'var(--danger)':'var(--cyan)';ui.wave.textContent='WAVE '+String(wave).padStart(2,'0');
+    }
+    function burst(x,y,color,count=12,speed=180){ for(let i=0;i<count;i++){const a=Math.random()*Math.PI*2,s=rand(speed*.25,speed);particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:rand(.25,.7),max:1,color,size:rand(1,4)});} }
+    function fire(){ bullets.push({x:ship.x,y:ship.y-26,prevY:ship.y-26,vy:-720});tone(430,.045,'square',.018); }
+    function spawnRock(){
+      const r=rand(18,46), tough=r>35?2:1;
+      rocks.push({x:rand(r,W-r),y:-r-10,r,vx:rand(-35,35),vy:rand(85,135)+wave*9,rot:rand(0,6),spin:rand(-1.3,1.3),hp:tough,max:tough,shape:Array.from({length:9},()=>rand(.78,1.08))});
+    }
+    function gameOver(){
+      running=false;const best=Math.max(score,bestScore());localStorage.setItem('orbital-best',best);ui.best.textContent=String(best).padStart(6,'0');
+      ui.eyebrow.textContent='MISSION REPORT';ui.title.textContent='防线失守';ui.subtitle.textContent=`本次获得 ${score} 分，抵挡至第 ${wave} 波。重新整备，下一次走得更远。`;ui.start.textContent='重新出击';ui.overlay.classList.remove('hidden');tone(90,.5,'sawtooth',.05);
+    }
+    function togglePause(){ if(!running)return;paused=!paused; if(paused){ui.eyebrow.textContent='SYSTEM PAUSED';ui.title.textContent='任务暂停';ui.subtitle.textContent='拦截系统已待机。准备好后继续守卫轨道。';ui.start.textContent='继续任务';ui.overlay.classList.remove('hidden');}else{ui.overlay.classList.add('hidden');last=performance.now();requestAnimationFrame(loop);} }
+    function update(dt){
+      wave=1+Math.floor(score/1200); ship.fire-=dt;ship.invuln-=dt;screenShake=Math.max(0,screenShake-dt*18);
+      const move=(keys.ArrowRight||keys.KeyD?1:0)-(keys.ArrowLeft||keys.KeyA?1:0);
+      const targetSpeed=move*460;
+      ship.vx+=(targetSpeed-ship.vx)*Math.min(1,dt*(move?14:20));
+      ship.x=clamp(ship.x+ship.vx*dt,30,W-30);
+      if((keys.Space||keys.KeyJ)&&ship.fire<=0){fire();ship.fire=.17;}
+      spawnTimer-=dt;if(spawnTimer<=0){spawnRock();spawnTimer=Math.max(.3,1.18-wave*.05)*rand(.78,1.16);}
+      stars.forEach(s=>{s.y+=25*s.z*dt;if(s.y>H){s.y=0;s.x=Math.random()*W;}});
+      bullets.forEach(b=>{b.prevY=b.y;b.y+=b.vy*dt}); rocks.forEach(r=>{r.x+=r.vx*dt;r.y+=r.vy*dt;r.rot+=r.spin*dt;});
+      particles.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.985;p.vy*=.985;p.life-=dt;});
+      for(let i=rocks.length-1;i>=0;i--){ const r=rocks[i];
+        for(let j=bullets.length-1;j>=0;j--){
+          const b=bullets[j], top=Math.min(b.y,b.prevY), bottom=Math.max(b.y,b.prevY), hitRadius=r.r+7;
+          const nearestY=clamp(r.y,top,bottom);
+          if((b.x-r.x)**2+(nearestY-r.y)**2<hitRadius*hitRadius){
+            bullets.splice(j,1);r.hp--;burst(b.x,nearestY,'#50e3c2',8,110);screenShake=2;tone(180,.06,'square',.025);
+            if(r.hp<=0){score+=Math.round(r.r*3);burst(r.x,r.y,'#ffb84c',18,230);rocks.splice(i,1);screenShake=4;tone(120,.12,'sawtooth',.03);updateUI();}
+            break;
+          }
+        }
+        if(!rocks.includes(r))continue;
+        if((r.x-ship.x)**2+(r.y-ship.y)**2<(r.r+20)**2 && ship.invuln<=0){hp=Math.max(0,hp-18);ship.invuln=1.4;rocks.splice(i,1);burst(ship.x,ship.y,'#ff5f57',25,260);screenShake=12;updateUI();if(hp<=0){gameOver();return;}}
+        else if(r.y-r.r>H){rocks.splice(i,1);hp=Math.max(0,hp-6);screenShake=7;updateUI();if(hp<=0){gameOver();return;}}
+      }
+      for(let i=bullets.length-1;i>=0;i--)if(bullets[i].y<-20)bullets.splice(i,1);
+      for(let i=particles.length-1;i>=0;i--)if(particles[i].life<=0)particles.splice(i,1);
+    }
+    function drawShip(){
+      const blink=ship.invuln>0&&Math.floor(ship.invuln*12)%2===0;if(blink)return;ctx.save();ctx.translate(ship.x,ship.y);
+      const flame=rand(14,25);ctx.beginPath();ctx.moveTo(-7,16);ctx.lineTo(0,16+flame);ctx.lineTo(7,16);ctx.fillStyle='#ffb84c';ctx.fill();
+      ctx.beginPath();ctx.moveTo(0,-30);ctx.lineTo(22,20);ctx.lineTo(7,15);ctx.lineTo(0,22);ctx.lineTo(-7,15);ctx.lineTo(-22,20);ctx.closePath();ctx.fillStyle='#d9e4e5';ctx.fill();ctx.strokeStyle='#50e3c2';ctx.lineWidth=2;ctx.stroke();
+      ctx.beginPath();ctx.moveTo(0,-18);ctx.lineTo(6,6);ctx.lineTo(-6,6);ctx.closePath();ctx.fillStyle='#143d45';ctx.fill();ctx.restore();
+    }
+    function drawRock(r){ctx.save();ctx.translate(r.x,r.y);ctx.rotate(r.rot);ctx.beginPath();r.shape.forEach((n,i)=>{const a=i/r.shape.length*Math.PI*2,x=Math.cos(a)*r.r*n,y=Math.sin(a)*r.r*n;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.closePath();ctx.fillStyle='#3a3e3d';ctx.fill();ctx.strokeStyle=r.hp<r.max?'#ffb84c':'#79817f';ctx.lineWidth=2;ctx.stroke();ctx.beginPath();ctx.arc(-r.r*.22,-r.r*.12,r.r*.18,0,7);ctx.strokeStyle='#242827';ctx.stroke();ctx.restore();}
+    function draw(){
+      ctx.save();if(screenShake)ctx.translate(rand(-screenShake,screenShake),rand(-screenShake,screenShake));
+      const bg=ctx.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#061014');bg.addColorStop(1,'#020609');ctx.fillStyle=bg;ctx.fillRect(-20,-20,W+40,H+40);
+      ctx.strokeStyle='rgba(73,145,151,.055)';ctx.lineWidth=1;for(let x=0;x<W;x+=80){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}for(let y=0;y<H;y+=80){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+      stars.forEach(s=>{ctx.fillStyle=`rgba(205,238,240,${.25+s.z*.45})`;ctx.fillRect(s.x,s.y,s.z*1.5,s.z*1.5)});
+      bullets.forEach(b=>{ctx.fillStyle='#50e3c2';ctx.shadowColor='#50e3c2';ctx.shadowBlur=10;ctx.fillRect(b.x-2,b.y-11,4,16);ctx.shadowBlur=0});
+      rocks.forEach(drawRock);particles.forEach(p=>{ctx.globalAlpha=Math.max(0,p.life*1.8);ctx.fillStyle=p.color;ctx.fillRect(p.x,p.y,p.size,p.size)});ctx.globalAlpha=1;drawShip();ctx.restore();
+    }
+    function loop(t){if(!running||paused)return;const dt=Math.min((t-last)/1000,.033);last=t;update(dt);draw();if(running)requestAnimationFrame(loop);}
+    addEventListener('keydown',e=>{keys[e.code]=true;if(['Space','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();if((e.code==='KeyP'||e.code==='Escape')&&!e.repeat)togglePause();});
+    addEventListener('keyup',e=>keys[e.code]=false);
+    document.querySelectorAll('[data-key]').forEach(b=>{const k=b.dataset.key;b.addEventListener('pointerdown',e=>{e.preventDefault();keys[k]=true;try{b.setPointerCapture(e.pointerId)}catch(_){}});b.addEventListener('pointerup',e=>{e.preventDefault();keys[k]=false});b.addEventListener('pointercancel',()=>keys[k]=false);b.addEventListener('touchend',()=>keys[k]=false,{passive:true})});
+    const touchFire=$('#touchFire');let touchFireTimer=0,lastTouchShot=0;
+    function shootFromTouch(e){
+      if(e?.cancelable)e.preventDefault();
+      if(!running||paused)return;
+      const now=performance.now();
+      if(now-lastTouchShot>130){fire();ship.fire=.17;lastTouchShot=now;}
+    }
+    function beginTouchFire(e){shootFromTouch(e);keys.Space=true;clearInterval(touchFireTimer);touchFireTimer=setInterval(()=>shootFromTouch(),170)}
+    function endTouchFire(e){if(e?.cancelable)e.preventDefault();keys.Space=false;clearInterval(touchFireTimer);touchFireTimer=0}
+    touchFire.addEventListener('touchstart',beginTouchFire,{passive:false});
+    touchFire.addEventListener('touchend',endTouchFire,{passive:false});
+    touchFire.addEventListener('touchcancel',endTouchFire,{passive:false});
+    touchFire.addEventListener('pointerdown',e=>{if(e.pointerType!=='touch')beginTouchFire(e)});
+    touchFire.addEventListener('pointerup',e=>{if(e.pointerType!=='touch')endTouchFire(e)});
+    touchFire.addEventListener('pointercancel',endTouchFire);
+    touchFire.addEventListener('click',shootFromTouch);
+    ui.start.addEventListener('click',()=>{if(running&&paused){paused=false;ui.overlay.classList.add('hidden');last=performance.now();requestAnimationFrame(loop)}else start()});
+    $('#pause').addEventListener('click',togglePause);$('#sound').addEventListener('click',()=>{soundOn=!soundOn;$('#soundWaves').style.display=soundOn?'':'none';tone(300)});
+    draw();
+  })();
+  </script>
+</body>
+</html>
